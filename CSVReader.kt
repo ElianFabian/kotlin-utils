@@ -112,29 +112,31 @@ class CSVReader @JvmOverloads constructor(
         return foundRows
     }
 
-    fun findFirstWithNamedColumns(row: Predicate<Row>): List<String>
+    fun findFirstWithNamedColumns(row: Predicate<Row>): Row
     {
-        val currentRow = Row()
-        var foundRow = emptyList<String>()
+        var foundRow = Row()
 
         readFileRows()
         {
-            val hasBeenFound = row.test(currentRow.apply { value = it })
-            if (hasBeenFound) foundRow = currentRow.value
+            val currentRow = Row().apply { value = it }
+
+            val hasBeenFound = row.test(currentRow)
+            if (hasBeenFound) foundRow = currentRow
         }
 
         return foundRow
     }
 
-    fun findAllWithNamedColumns(row: Predicate<Row>): List<List<String>>
+    fun findAllWithNamedColumns(row: Predicate<Row>): List<Row>
     {
-        val currentRow = Row()
-        val foundRows = mutableListOf<List<String>>()
+        val foundRows = mutableListOf<Row>()
 
         readFileRows()
         {
-            val hasBeenFound = row.test(currentRow.apply { value = it })
-            if (hasBeenFound) foundRows.add(it)
+            val currentRow = Row().apply { value = it }
+
+            val hasBeenFound = row.test(currentRow)
+            if (hasBeenFound) foundRows.add(currentRow)
         }
 
         return foundRows
@@ -184,7 +186,7 @@ class CSVReader @JvmOverloads constructor(
 
     inner class Row
     {
-        lateinit var value: List<String>
+        var value = listOf<String>()
 
         fun getString(columnName: String): String = value[headersWithPositions[columnName]!!]
 
