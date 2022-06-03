@@ -1,5 +1,3 @@
-package com.elian
-
 import java.io.BufferedReader
 import java.io.FileReader
 import java.util.function.Consumer
@@ -242,30 +240,24 @@ class CSVReader @JvmOverloads constructor(
 
         fun getBoolean(columnName: String): Boolean = this[columnName].toBoolean()
 
-        inline fun <reified T : Enum<T>> getEnum(columnName: String): T?
+        inline fun <reified T : Enum<T>> getEnum(columnName: String): T? = try
         {
-            return try
-            {
-                enumValueOf<T>(this[columnName])
-            }
-            catch (e: IllegalArgumentException)
-            {
-                null
-            }
+            enumValueOf<T>(this[columnName])
+        }
+        catch (e: IllegalArgumentException)
+        {
+            null
         }
 
         // This is to only allow java use this method.
         @SinceKotlin("9999.0")
-        fun <T : Enum<T>> getEnum(enumClass: Class<T>, columnName: String): Enum<T>?
+        fun <T : Enum<T>> getEnum(enumClass: Class<T>, columnName: String): Enum<T>? = try
         {
-            return try
-            {
-                enumClass.enumConstants.first { it.name == this[columnName] }
-            }
-            catch (e: NoSuchElementException)
-            {
-                null
-            }
+            enumClass.enumConstants.first { it.name == this[columnName] }
+        }
+        catch (e: NoSuchElementException)
+        {
+            null
         }
 
         operator fun get(columnName: String): String = getString(columnName)
