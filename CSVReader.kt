@@ -1,3 +1,5 @@
+package com.elian
+
 import java.io.BufferedReader
 import java.io.FileReader
 import java.util.function.Consumer
@@ -35,7 +37,7 @@ class CSVReader @JvmOverloads constructor(
 
         readFileRows()
         {
-            currentRow.content = it
+            currentRow.value = it
             row.accept(currentRow)
         }
     }
@@ -119,8 +121,8 @@ class CSVReader @JvmOverloads constructor(
 
         readFileRows()
         {
-            val hasBeenFound = row.test(currentRow.apply { content = it })
-            if (hasBeenFound) foundRow = currentRow.content
+            val hasBeenFound = row.test(currentRow.apply { value = it })
+            if (hasBeenFound) foundRow = currentRow.value
         }
 
         return foundRow
@@ -133,7 +135,7 @@ class CSVReader @JvmOverloads constructor(
 
         readFileRows()
         {
-            val hasBeenFound = row.test(currentRow.apply { content = it })
+            val hasBeenFound = row.test(currentRow.apply { value = it })
             if (hasBeenFound) foundRows.add(it)
         }
 
@@ -184,9 +186,9 @@ class CSVReader @JvmOverloads constructor(
 
     inner class Row
     {
-        lateinit var content: List<String>
+        lateinit var value: List<String>
 
-        fun getString(columnName: String): String = content[headersWithPositions[columnName]!!]
+        fun getString(columnName: String): String = value[headersWithPositions[columnName]!!]
 
         fun getChar(columnName: String): Char = getString(columnName)[0]
 
