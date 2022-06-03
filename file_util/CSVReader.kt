@@ -214,7 +214,12 @@ class CSVReader @JvmOverloads constructor(
 
     inner class Row(var columns: List<String> = listOf())
     {
-        fun getString(columnName: String): String = columns[headersWithPositions[columnName]!!]
+        fun getString(columnName: String): String
+        {
+            if (!headersWithPositions.contains(columnName)) throw IllegalArgumentException("Column $columnName does not exist")
+
+            return columns[headersWithPositions[columnName]!!]
+        }
 
         fun getChar(columnName: String): Char = this[columnName][0]
 
