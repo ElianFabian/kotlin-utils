@@ -35,7 +35,7 @@ class CSVReader @JvmOverloads constructor(
 
         readFileRows()
         {
-            currentRow.value = it
+            currentRow.columns = it
             row.accept(currentRow)
         }
     }
@@ -118,7 +118,7 @@ class CSVReader @JvmOverloads constructor(
 
         readFileRows()
         {
-            val currentRow = Row().apply { value = it }
+            val currentRow = Row().apply { columns = it }
 
             val hasBeenFound = row.test(currentRow)
             if (hasBeenFound) foundRow = currentRow
@@ -133,7 +133,7 @@ class CSVReader @JvmOverloads constructor(
 
         readFileRows()
         {
-            val currentRow = Row().apply { value = it }
+            val currentRow = Row().apply { columns = it }
 
             val hasBeenFound = row.test(currentRow)
             if (hasBeenFound) foundRows.add(currentRow)
@@ -186,9 +186,9 @@ class CSVReader @JvmOverloads constructor(
 
     inner class Row
     {
-        var value = listOf<String>()
+        var columns = listOf<String>()
 
-        fun getString(columnName: String): String = value[headersWithPositions[columnName]!!]
+        fun getString(columnName: String): String = columns[headersWithPositions[columnName]!!]
 
         fun getChar(columnName: String): Char = getString(columnName)[0]
 
