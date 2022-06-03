@@ -67,26 +67,41 @@ class XMLReader(val filename: String)
         fun getChar(columnName: String): Char = this[columnName][0]
 
         fun getByte(childName: String): Byte = this[childName].toByte()
-
         fun getUByte(childName: String): UByte = this[childName].toUByte()
 
         fun getShort(childName: String): Short = this[childName].toShort()
-
         fun getUShort(childName: String): UShort = this[childName].toUShort()
 
         fun getInt(childName: String): Int = this[childName].toInt()
-
         fun getUInt(childName: String): UInt = this[childName].toUInt()
 
         fun getLong(childName: String): Long = this[childName].toLong()
-
         fun getULong(childName: String): ULong = this[childName].toULong()
 
         fun getFloat(childName: String): Float = this[childName].toFloat()
-
         fun getDouble(childName: String): Double = this[childName].toDouble()
 
         fun getBoolean(childName: String): Boolean = this[childName].toBoolean()
+
+        inline fun <reified T : Enum<T>> getEnum(columnName: String): T? = try
+        {
+            enumValueOf<T>(this[columnName])
+        }
+        catch (e: IllegalArgumentException)
+        {
+            null
+        }
+
+        // This is to only allow java use this method.
+        @SinceKotlin("9999.0")
+        fun <T : Enum<T>> getEnum(enumClass: Class<T>, columnName: String): Enum<T>? = try
+        {
+            enumClass.enumConstants.first { it.name == this[columnName] }
+        }
+        catch (e: NoSuchElementException)
+        {
+            null
+        }
 
         fun getAttributeContent(name: String): String = value.getAttribute(name)
 
