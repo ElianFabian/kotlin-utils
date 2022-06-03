@@ -260,6 +260,9 @@ class CSVReader @JvmOverloads constructor(
             null
         }
 
+        /**
+         * Equivalent to getString().
+         */
         operator fun get(columnName: String): String = getString(columnName)
     }
 }
