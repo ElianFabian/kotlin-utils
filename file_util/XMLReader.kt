@@ -64,30 +64,32 @@ class XMLReader(val filename: String)
 
         fun getString(childName: String?): String = value.getElementsByTagName(childName).item(0).textContent
 
-        fun getChar(columnName: String): Char = getString(columnName)[0]
+        fun getChar(columnName: String): Char = this[columnName][0]
 
-        fun getByte(childName: String): Byte = getString(childName).toByte()
+        fun getByte(childName: String): Byte = this[childName].toByte()
 
-        fun getUByte(childName: String): UByte = getString(childName).toUByte()
+        fun getUByte(childName: String): UByte = this[childName].toUByte()
 
-        fun getShort(childName: String): Short = getString(childName).toShort()
+        fun getShort(childName: String): Short = this[childName].toShort()
 
-        fun getUShort(childName: String): UShort = getString(childName).toUShort()
+        fun getUShort(childName: String): UShort = this[childName].toUShort()
 
-        fun getInt(childName: String): Int = getString(childName).toInt()
+        fun getInt(childName: String): Int = this[childName].toInt()
 
-        fun getUInt(childName: String): UInt = getString(childName).toUInt()
+        fun getUInt(childName: String): UInt = this[childName].toUInt()
 
-        fun getLong(childName: String): Long = getString(childName).toLong()
+        fun getLong(childName: String): Long = this[childName].toLong()
 
-        fun getULong(childName: String): ULong = getString(childName).toULong()
+        fun getULong(childName: String): ULong = this[childName].toULong()
 
-        fun getFloat(childName: String): Float = getString(childName).toFloat()
+        fun getFloat(childName: String): Float = this[childName].toFloat()
 
-        fun getDouble(childName: String): Double = getString(childName).toDouble()
+        fun getDouble(childName: String): Double = this[childName].toDouble()
 
-        fun getBoolean(childName: String): Boolean = getString(childName).toBoolean()
+        fun getBoolean(childName: String): Boolean = this[childName].toBoolean()
 
         fun getAttributeContent(name: String): String = value.getAttribute(name)
+
+        operator fun get(childName: String): String = getString(childName)
     }
 }
