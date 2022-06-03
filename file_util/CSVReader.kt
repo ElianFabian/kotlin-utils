@@ -249,11 +249,36 @@ class CSVReader @JvmOverloads constructor(
             null
         }
 
+        /**
+         * Uppercase the value of the column.
+         */
+        inline fun <reified T : Enum<T>> getEnumUsingUpperCase(columnName: String): T? = try
+        {
+            enumValueOf<T>(this[columnName].uppercase())
+        }
+        catch (e: IllegalArgumentException)
+        {
+            null
+        }
+
         // This is to only allow java use this method.
         @SinceKotlin("9999.0")
         fun <T : Enum<T>> getEnum(enumClass: Class<T>, columnName: String): Enum<T>? = try
         {
             enumClass.enumConstants.first { it.name == this[columnName] }
+        }
+        catch (e: NoSuchElementException)
+        {
+            null
+        }
+        
+        /**
+         * Uppercase the value of the column.
+         */
+        @SinceKotlin("9999.0")
+        fun <T : Enum<T>> getEnumUsingUpperCase(enumClass: Class<T>, columnName: String): Enum<T>? = try
+        {
+            enumClass.enumConstants.first { it.name == this[columnName].uppercase() }
         }
         catch (e: NoSuchElementException)
         {
