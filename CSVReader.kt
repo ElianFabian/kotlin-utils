@@ -1,5 +1,3 @@
-package com.elian
-
 import java.io.BufferedReader
 import java.io.FileReader
 import java.util.function.Consumer
@@ -20,9 +18,9 @@ class CSVReader @JvmOverloads constructor(
 
     //region Public methods
 
-    fun readByPosition(row: Consumer<List<String>>) = readFileRows { row.accept(it) }
+    fun read(row: Consumer<List<String>>) = readFileRows { row.accept(it) }
 
-    fun readByPosition(): List<List<String>>
+    fun read(): List<List<String>>
     {
         val rows = mutableListOf<List<String>>()
 
@@ -31,7 +29,7 @@ class CSVReader @JvmOverloads constructor(
         return rows
     }
 
-    fun readByName(row: Consumer<Row>)
+    fun readWithNamedColumns(row: Consumer<Row>)
     {
         val currentRow = Row()
 
@@ -42,7 +40,7 @@ class CSVReader @JvmOverloads constructor(
         }
     }
 
-    fun readByName(): List<HashMap<String, String>>
+    fun readWithNamedColumns(): List<HashMap<String, String>>
     {
         val rows: MutableList<HashMap<String, String>> = mutableListOf()
 
@@ -64,7 +62,7 @@ class CSVReader @JvmOverloads constructor(
     {
         val values = mutableListOf<String>()
 
-        readByPosition()
+        read()
         {
             val currentValue = it[columnPosition]
 
@@ -78,7 +76,7 @@ class CSVReader @JvmOverloads constructor(
     {
         val values = mutableListOf<String>()
 
-        readByName()
+        readWithNamedColumns()
         {
             val currentValue = it.getString(columnName)
 
