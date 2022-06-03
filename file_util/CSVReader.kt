@@ -224,23 +224,18 @@ class CSVReader @JvmOverloads constructor(
         fun getChar(columnName: String): Char = this[columnName][0]
 
         fun getByte(columnName: String): Byte = this[columnName].toByte()
-
         fun getUByte(columnName: String): UByte = this[columnName].toUByte()
 
         fun getShort(columnName: String): Short = this[columnName].toShort()
-
         fun getUShort(columnName: String): UShort = this[columnName].toUShort()
 
         fun getInt(columnName: String): Int = this[columnName].toInt()
-
         fun getUInt(columnName: String): UInt = this[columnName].toUInt()
 
         fun getLong(columnName: String): Long = this[columnName].toLong()
-
         fun getULong(columnName: String): ULong = this[columnName].toULong()
 
         fun getFloat(columnName: String): Float = this[columnName].toFloat()
-
         fun getDouble(columnName: String): Double = this[columnName].toDouble()
 
         fun getBoolean(columnName: String): Boolean = this[columnName].toBoolean()
