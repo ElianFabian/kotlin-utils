@@ -1,5 +1,7 @@
 import java.io.BufferedReader
 import java.io.FileReader
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.util.function.Consumer
 import java.util.function.Predicate
 
@@ -140,6 +142,26 @@ class CSVReader @JvmOverloads constructor(
         readFirstFileRow { firstRow.columns = it }
 
         return firstRow
+    }
+    
+    fun getRow(rowNumber: Long): List<String>
+    {
+        var rowFromSpecificLine = emptyList<String>()
+
+        val specificLine = Files.lines(Paths.get(filename)).use { it.skip(rowNumber + 1).findFirst().get() }
+        
+        rowFromSpecificLine = specificLine.split(separator).toList()
+
+        return rowFromSpecificLine
+    }
+
+    fun getRowWithNamedColumns(rowNumber: Long): Row
+    {
+        val specificLine = Files.lines(Paths.get(filename)).use { it.skip(rowNumber + 1).findFirst().get() }
+
+        val columns = specificLine.split(separator).toList()
+
+        return Row(columns)
     }
 
     fun findFirst(row: Predicate<List<String>>): List<String>
