@@ -78,12 +78,40 @@ class CSVReader @JvmOverloads constructor(
 
         readWithNamedColumns()
         {
-            val currentValue = it.getString(columnName)
+            val currentValue = it[columnName]
 
             values.add(currentValue)
         }
 
         return values
+    }
+    
+    fun getUniqueValues(columnPosition: Int): List<String>
+    {
+        val values = mutableListOf<String>()
+
+        read()
+        {
+            val currentValue = it[columnPosition]
+
+            if (!values.contains(currentValue)) values.add(currentValue)
+        }
+
+        return values.apply { remove("") }
+    }
+    
+    fun getUniqueValues(columnName: String): List<String>
+    {
+        val values = mutableListOf<String>()
+
+        readWithNamedColumns()
+        {
+            val currentValue = it[columnName]
+
+            if (!values.contains(currentValue)) values.add(currentValue)
+        }
+
+        return values.apply { remove("") }
     }
 
     fun findFirst(row: Predicate<List<String>>): List<String>
@@ -118,7 +146,7 @@ class CSVReader @JvmOverloads constructor(
 
         readFileRows()
         {
-            val currentRow = Row().apply { columns = it }
+            val currentRow = Row(columns = it)
 
             val hasBeenFound = row.test(currentRow)
             if (hasBeenFound) foundRow = currentRow
@@ -133,7 +161,7 @@ class CSVReader @JvmOverloads constructor(
 
         readFileRows()
         {
-            val currentRow = Row().apply { columns = it }
+            val currentRow = Row(columns = it)
 
             val hasBeenFound = row.test(currentRow)
             if (hasBeenFound) foundRows.add(currentRow)
@@ -184,34 +212,34 @@ class CSVReader @JvmOverloads constructor(
 
     //endregion
 
-    inner class Row
+    inner class Row(var columns: List<String> = listOf())
     {
-        var columns = listOf<String>()
-
         fun getString(columnName: String): String = columns[headersWithPositions[columnName]!!]
 
-        fun getChar(columnName: String): Char = getString(columnName)[0]
+        fun getChar(columnName: String): Char = this[columnName][0]
 
-        fun getByte(columnName: String): Byte = getString(columnName).toByte()
+        fun getByte(columnName: String): Byte = this[columnName].toByte()
 
-        fun getUByte(columnName: String): UByte = getString(columnName).toUByte()
+        fun getUByte(columnName: String): UByte = this[columnName].toUByte()
 
-        fun getShort(columnName: String): Short = getString(columnName).toShort()
+        fun getShort(columnName: String): Short = this[columnName].toShort()
 
-        fun getUShort(columnName: String): UShort = getString(columnName).toUShort()
+        fun getUShort(columnName: String): UShort = this[columnName].toUShort()
 
-        fun getInt(columnName: String): Int = getString(columnName).toInt()
+        fun getInt(columnName: String): Int = this[columnName].toInt()
 
-        fun getUInt(columnName: String): UInt = getString(columnName).toUInt()
+        fun getUInt(columnName: String): UInt = this[columnName].toUInt()
 
-        fun getLong(columnName: String): Long = getString(columnName).toLong()
+        fun getLong(columnName: String): Long = this[columnName].toLong()
 
-        fun getULong(columnName: String): ULong = getString(columnName).toULong()
+        fun getULong(columnName: String): ULong = this[columnName].toULong()
 
-        fun getFloat(columnName: String): Float = getString(columnName).toFloat()
+        fun getFloat(columnName: String): Float = this[columnName].toFloat()
 
-        fun getDouble(columnName: String): Double = getString(columnName).toDouble()
+        fun getDouble(columnName: String): Double = this[columnName].toDouble()
 
-        fun getBoolean(columnName: String): Boolean = getString(columnName).toBoolean()
+        fun getBoolean(columnName: String): Boolean = this[columnName].toBoolean()
+
+        operator fun get(columnName: String): String = getString(columnName)
     }
 }
