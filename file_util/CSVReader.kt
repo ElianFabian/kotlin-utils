@@ -85,7 +85,7 @@ class CSVReader @JvmOverloads constructor(
 
         return values
     }
-    
+
     fun getUniqueValues(columnPosition: Int): List<String>
     {
         val values = mutableListOf<String>()
@@ -99,7 +99,7 @@ class CSVReader @JvmOverloads constructor(
 
         return values.apply { remove("") }
     }
-    
+
     fun getUniqueValues(columnName: String): List<String>
     {
         val values = mutableListOf<String>()
@@ -239,6 +239,18 @@ class CSVReader @JvmOverloads constructor(
         fun getDouble(columnName: String): Double = this[columnName].toDouble()
 
         fun getBoolean(columnName: String): Boolean = this[columnName].toBoolean()
+
+        inline fun <reified T : Enum<T>> getEnum(columnName: String): T?
+        {
+            return try
+            {
+                enumValueOf<T>(this[columnName])
+            }
+            catch (e: IllegalArgumentException)
+            {
+                null
+            }
+        }
 
         operator fun get(columnName: String): String = getString(columnName)
     }
