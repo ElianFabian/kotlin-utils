@@ -16,6 +16,16 @@ class CSVReader @JvmOverloads constructor(
 
     private lateinit var headersWithPositions: HashMap<String, Int>
 
+    val rowCount: Int
+        get()
+        {
+            var rowCount = 0
+
+            readFileRows { rowCount++ }
+
+            return rowCount
+        }
+
     //region Public methods
 
     fun read(row: Consumer<List<String>>) = readFileRows { row.accept(it) }
@@ -114,6 +124,24 @@ class CSVReader @JvmOverloads constructor(
         return values.apply { remove("") }
     }
 
+    fun getFirst(): List<String>
+    {
+        var first = emptyList<String>()
+
+        readFirstFileRow { first = it }
+
+        return first
+    }
+
+    fun getFirstWithNamedColumns(): Row
+    {
+        val firstRow = Row()
+
+        readFirstFileRow { firstRow.columns = it }
+
+        return firstRow
+    }
+
     fun findFirst(row: Predicate<List<String>>): List<String>
     {
         var foundRow: List<String> = emptyList()
@@ -210,6 +238,22 @@ class CSVReader @JvmOverloads constructor(
         }
     }
 
+    private fun readFirstFileRow(action: (currentRow: List<String>) -> Unit)
+    {
+        var line: String?
+
+        BufferedReader(FileReader(filename)).use { br ->
+
+            if (hasHeader) br.readLine()
+
+            if (br.readLine().also { line = it } != null)
+            {
+                val currentRow = line!!.split(separator.toString())
+                action(currentRow)
+            }
+        }
+    }
+
     //endregion
 
     inner class Row(var columns: List<String> = listOf())
@@ -271,7 +315,7 @@ class CSVReader @JvmOverloads constructor(
         {
             null
         }
-        
+
         /**
          * Uppercase the value of the column.
          */
