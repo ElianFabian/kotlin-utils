@@ -128,7 +128,7 @@ class CSVReader @JvmOverloads constructor(
         return foundRow
     }
 
-    fun findAllRowsWithColumnName(row: Predicate<Row>): List<List<String>>
+    fun findAllRowsByColumnName(row: Predicate<Row>): List<List<String>>
     {
         val currentRow = Row()
         val foundRows = mutableListOf<List<String>>()
