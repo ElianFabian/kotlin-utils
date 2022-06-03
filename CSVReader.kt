@@ -88,7 +88,7 @@ class CSVReader @JvmOverloads constructor(
         return values
     }
 
-    fun findRowByColumnPosition(row: Predicate<List<String>>): List<String>
+    fun findFirst(row: Predicate<List<String>>): List<String>
     {
         var foundRow: List<String> = emptyList()
 
@@ -101,7 +101,7 @@ class CSVReader @JvmOverloads constructor(
         return foundRow
     }
 
-    fun findAllRowsByColumnPosition(row: Predicate<List<String>>): List<List<String>>
+    fun findAll(row: Predicate<List<String>>): List<List<String>>
     {
         val foundRows = mutableListOf<List<String>>()
 
@@ -114,7 +114,7 @@ class CSVReader @JvmOverloads constructor(
         return foundRows
     }
 
-    fun findRowByColumnName(row: Predicate<Row>): List<String>
+    fun findFirstWithNamedColumns(row: Predicate<Row>): List<String>
     {
         val currentRow = Row()
         var foundRow = emptyList<String>()
@@ -128,7 +128,7 @@ class CSVReader @JvmOverloads constructor(
         return foundRow
     }
 
-    fun findAllRowsByColumnName(row: Predicate<Row>): List<List<String>>
+    fun findAllWithNamedColumns(row: Predicate<Row>): List<List<String>>
     {
         val currentRow = Row()
         val foundRows = mutableListOf<List<String>>()
