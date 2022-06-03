@@ -166,7 +166,7 @@ class CSVReader @JvmOverloads constructor(
         }
     }
 
-    private fun readFileRows(lambda: (currentRow: List<String>) -> Unit)
+    private fun readFileRows(action: (currentRow: List<String>) -> Unit)
     {
         var line: String?
 
@@ -177,7 +177,7 @@ class CSVReader @JvmOverloads constructor(
             while (br.readLine().also { line = it } != null)
             {
                 val currentRow = line!!.split(separator.toString())
-                lambda(currentRow)
+                action(currentRow)
             }
         }
     }
