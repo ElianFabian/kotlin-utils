@@ -29,6 +29,26 @@ class CSVReader @JvmOverloads constructor(
             return rowCount
         }
 
+    val first
+        get(): List<String>
+        {
+            var first = emptyList<String>()
+
+            readFirstFileRow { first = it }
+
+            return first
+        }
+
+    val firstWithNamedColumns
+        get(): Row
+        {
+            val firstRow = Row()
+
+            readFirstFileRow { firstRow.columns = it }
+
+            return firstRow
+        }
+
     //region Public methods
 
     fun read(row: Consumer<List<String>>) = readFileRows { row.accept(it) }
@@ -125,24 +145,6 @@ class CSVReader @JvmOverloads constructor(
         }
 
         return values.apply { remove("") }
-    }
-
-    fun getFirst(): List<String>
-    {
-        var first = emptyList<String>()
-
-        readFirstFileRow { first = it }
-
-        return first
-    }
-
-    fun getFirstWithNamedColumns(): Row
-    {
-        val firstRow = Row()
-
-        readFirstFileRow { firstRow.columns = it }
-
-        return firstRow
     }
 
     fun getRow(rowNumber: Long): List<String>
