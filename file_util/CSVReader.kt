@@ -216,7 +216,7 @@ class CSVReader @JvmOverloads constructor(
 
         readFileRows()
         {
-            val currentRow = Row(columns = it)
+            val currentRow = Row(it)
 
             val hasBeenFound = row.test(currentRow)
             if (hasBeenFound) foundRow = currentRow
@@ -238,6 +238,43 @@ class CSVReader @JvmOverloads constructor(
         }
 
         return foundRows
+    }
+
+    fun groupBy(columnPosition: Int): Map<String, List<List<String>>>
+    {
+        val groupedRows = mutableMapOf<String, MutableList<List<String>>>()
+
+        readFileRows()
+        {
+            val currentValueToGroupBy = it[columnPosition]
+
+            if (groupedRows.containsKey(currentValueToGroupBy))
+            {
+                groupedRows[currentValueToGroupBy]!!.add(it)
+            }
+            else groupedRows[currentValueToGroupBy] = mutableListOf(it)
+        }
+
+        return groupedRows
+    }
+
+    fun groupByWithNamedColumns(columnName: String): Map<String, List<Row>>
+    {
+        val groupedRows = mutableMapOf<String, MutableList<Row>>()
+
+        readFileRows()
+        {
+            val currentRow = Row(it)
+            val currentValueToGroupBy = currentRow[columnName]
+
+            if (!groupedRows.containsKey(currentValueToGroupBy))
+            {
+                groupedRows[currentValueToGroupBy] = mutableListOf<Row>().apply { add(currentRow) }
+            }
+            else groupedRows[currentValueToGroupBy]!!.add(currentRow)
+        }
+
+        return groupedRows
     }
 
     //endregion
@@ -450,6 +487,8 @@ class CSVReader @JvmOverloads constructor(
          * Equivalent to getString().
          */
         operator fun get(columnName: String): String = getString(columnName)
+
+        override fun toString(): String = columns.toString()
     }
 }
 
