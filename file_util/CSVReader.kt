@@ -312,20 +312,31 @@ class CSVReader @JvmOverloads constructor(
 
         fun getByte(columnName: String): Byte = this[columnName].toByte()
         fun getUByte(columnName: String): UByte = this[columnName].toUByte()
+        fun getByteOrNull(columnName: String): Byte? = this[columnName].toByteOrNull()
+        fun getUByteOrNull(columnName: String): UByte? = this[columnName].toUByteOrNull()
 
         fun getShort(columnName: String): Short = this[columnName].toShort()
         fun getUShort(columnName: String): UShort = this[columnName].toUShort()
+        fun getShortOrNull(columnName: String): Short? = this[columnName].toShortOrNull()
+        fun getUShortOrNull(columnName: String): UShort? = this[columnName].toUShortOrNull()
 
         fun getInt(columnName: String): Int = this[columnName].toInt()
         fun getUInt(columnName: String): UInt = this[columnName].toUInt()
+        fun getIntOrNull(columnName: String): Int? = this[columnName].toIntOrNull()
+        fun getUIntOrNull(columnName: String): UInt? = this[columnName].toUIntOrNull()
 
         fun getLong(columnName: String): Long = this[columnName].toLong()
         fun getULong(columnName: String): ULong = this[columnName].toULong()
+        fun getLongOrNull(columnName: String): Long? = this[columnName].toLongOrNull()
+        fun getULongOrNull(columnName: String): ULong? = this[columnName].toULongOrNull()
 
         fun getFloat(columnName: String): Float = this[columnName].toFloat()
+        fun getFloatOrNull(columnName: String): Float? = this[columnName].toFloatOrNull()
         fun getDouble(columnName: String): Double = this[columnName].toDouble()
+        fun getDoubleOrNull(columnName: String): Double? = this[columnName].toDoubleOrNull()
 
         fun getBoolean(columnName: String): Boolean = this[columnName].toBoolean()
+        fun getBooleanOrNull(columnName: String): Boolean? = this[columnName].lowercase().toBooleanStrictOrNull()
 
         inline fun <reified T : Enum<T>> getEnum(columnName: String): T = enumValueOf(this[columnName])
 
