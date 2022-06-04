@@ -4,6 +4,8 @@ import java.io.FileReader
 import java.nio.file.Files
 import java.util.function.Consumer
 import java.util.function.Predicate
+import kotlin.NoSuchElementException
+import kotlin.collections.HashMap
 
 class CSVReader @JvmOverloads constructor(
     pathname: String,
@@ -338,6 +340,42 @@ class CSVReader @JvmOverloads constructor(
         fun getBoolean(columnName: String): Boolean = this[columnName].toBoolean()
         fun getBooleanOrNull(columnName: String): Boolean? = this[columnName].lowercase().toBooleanStrictOrNull()
 
+        fun getBooleanFromStrings(columnName: String, trueString: String, falseString: String): Boolean
+        {
+            val columnValue = this[columnName]
+
+            return if (trueString == columnValue) true
+            else if (falseString == columnValue) false
+            else throw NotABooleanValueException(columnName, columnValue)
+        }
+
+        fun getBooleanOrNullFromStrings(columnName: String, trueString: String, falseString: String): Boolean?
+        {
+            val columnValue = this[columnName]
+
+            return if (trueString == columnValue) true
+            else if (falseString == columnValue) false
+            else null
+        }
+
+        fun getBooleanFromChars(columnName: String, trueChar: Char, falseChar: Char): Boolean
+        {
+            val columnValue = this[columnName]
+
+            return if (trueChar == columnValue[0]) true
+            else if (falseChar == columnValue[0]) false
+            else throw NotABooleanValueException(columnName, columnValue)
+        }
+
+        fun getBooleanOrNullFromChars(columnName: String, trueChar: Char, falseChar: Char): Boolean?
+        {
+            val columnValue = this[columnName]
+
+            return if (trueChar == columnValue[0]) true
+            else if (falseChar == columnValue[0]) false
+            else null
+        }
+
         inline fun <reified T : Enum<T>> getEnum(columnName: String): T = enumValueOf(this[columnName])
 
         inline fun <reified T : Enum<T>> getEnumOrNull(columnName: String): T? = try
@@ -415,4 +453,6 @@ class CSVReader @JvmOverloads constructor(
     }
 }
 
-class ColumnNotFoundException(columnName: String) : Exception("Column $columnName not found")
+class ColumnNotFoundException(columnName: String) : Exception("Column '$columnName' not found")
+
+class NotABooleanValueException(columnName: String, columnValue: String) : Exception("The value '$columnValue' in '$columnName' column is not a boolean value")
