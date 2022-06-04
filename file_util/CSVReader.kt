@@ -303,7 +303,7 @@ class CSVReader @JvmOverloads constructor(
 
         fun getString(columnName: String): String
         {
-            if (!headersWithPositions.contains(columnName)) throw IllegalArgumentException("Column $columnName does not exist")
+            if (!headersWithPositions.contains(columnName)) throw ColumnNotFoundException(columnName)
 
             return columns[headersWithPositions[columnName]!!]
         }
@@ -335,6 +335,7 @@ class CSVReader @JvmOverloads constructor(
         {
             null
         }
+
 
         /**
          * Uppercase with underscores the value of the column.
@@ -377,4 +378,6 @@ class CSVReader @JvmOverloads constructor(
          */
         operator fun get(columnName: String): String = getString(columnName)
     }
+
+    class ColumnNotFoundException(columnName: String) : Exception("Column $columnName not found")
 }
