@@ -30,6 +30,16 @@ class CSVReader @JvmOverloads constructor(
             return rowCount
         }
 
+    val columnCount: Int
+        get()
+        {
+            var columnCount = 0
+
+            readFileRows { columnCount = it.size }
+
+            return columnCount
+        }
+
     val first
         get(): List<String>
         {
@@ -49,9 +59,9 @@ class CSVReader @JvmOverloads constructor(
 
             return firstRow
         }
-    
+
     val last get(): List<String> = getRow(rowCount - 1)
-    
+
     val lastWithNamedColumns get(): Row = Row(getRow(rowCount - 1))
 
     //region Public methods
