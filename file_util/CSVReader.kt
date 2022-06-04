@@ -1,3 +1,4 @@
+import com.elian.extension.camelToSnakeCase
 import java.io.BufferedReader
 import java.io.FileReader
 import java.nio.file.Files
@@ -143,13 +144,13 @@ class CSVReader @JvmOverloads constructor(
 
         return firstRow
     }
-    
+
     fun getRow(rowNumber: Long): List<String>
     {
         var rowFromSpecificLine = emptyList<String>()
 
         val specificLine = Files.lines(Paths.get(filename)).use { it.skip(rowNumber + 1).findFirst().get() }
-        
+
         rowFromSpecificLine = specificLine.split(separator).toList()
 
         return rowFromSpecificLine
@@ -280,6 +281,9 @@ class CSVReader @JvmOverloads constructor(
 
     inner class Row(var columns: List<String> = listOf())
     {
+        @PublishedApi
+        internal val camelRegex = "(?<=[a-zA-Z])[A-Z]".toRegex()
+
         fun getString(columnName: String): String
         {
             if (!headersWithPositions.contains(columnName)) throw IllegalArgumentException("Column $columnName does not exist")
@@ -320,7 +324,7 @@ class CSVReader @JvmOverloads constructor(
          */
         inline fun <reified T : Enum<T>> getEnumUsingUpperCase(columnName: String): T? = try
         {
-            enumValueOf<T>(this[columnName].uppercase())
+            enumValueOf<T>(camelRegex.replace(this[columnName].uppercase()) { "_${it.value}" })
         }
         catch (e: IllegalArgumentException)
         {
@@ -344,7 +348,7 @@ class CSVReader @JvmOverloads constructor(
         @SinceKotlin("9999.0")
         fun <T : Enum<T>> getEnumUsingUpperCase(enumClass: Class<T>, columnName: String): Enum<T>? = try
         {
-            enumClass.enumConstants.first { it.name == this[columnName].uppercase() }
+            enumClass.enumConstants.first { it.name == camelRegex.replace(this[columnName].uppercase()) { a -> "_${a.value}" } }
         }
         catch (e: NoSuchElementException)
         {
