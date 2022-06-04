@@ -327,7 +327,9 @@ class CSVReader @JvmOverloads constructor(
 
         fun getBoolean(columnName: String): Boolean = this[columnName].toBoolean()
 
-        inline fun <reified T : Enum<T>> getEnum(columnName: String): T? = try
+        inline fun <reified T : Enum<T>> getEnum(columnName: String): T = enumValueOf(this[columnName])
+
+        inline fun <reified T : Enum<T>> getEnumOrNull(columnName: String): T? = try
         {
             enumValueOf<T>(this[columnName])
         }
@@ -336,11 +338,18 @@ class CSVReader @JvmOverloads constructor(
             null
         }
 
+        /**
+         * Uppercase with underscores the value of the column.
+         */
+        inline fun <reified T : Enum<T>> getEnumUsingUpperCase(columnName: String): T
+        {
+            return enumValueOf(camelRegex.replace(this[columnName].uppercase()) { "_${it.value}" })
+        }
 
         /**
          * Uppercase with underscores the value of the column.
          */
-        inline fun <reified T : Enum<T>> getEnumUsingUpperCase(columnName: String): T? = try
+        inline fun <reified T : Enum<T>> getEnumOrNullUsingUpperCase(columnName: String): T? = try
         {
             enumValueOf<T>(camelRegex.replace(this[columnName].uppercase()) { "_${it.value}" })
         }
@@ -351,7 +360,13 @@ class CSVReader @JvmOverloads constructor(
 
         // This is to only allow java use this method.
         @SinceKotlin("9999.0")
-        fun <T : Enum<T>> getEnum(enumClass: Class<T>, columnName: String): Enum<T>? = try
+        fun <T : Enum<T>> getEnum(enumClass: Class<T>, columnName: String): Enum<T>
+        {
+            return enumClass.enumConstants.first { it.name == this[columnName] }
+        }
+
+        @SinceKotlin("9999.0")
+        fun <T : Enum<T>> getEnumOrNull(enumClass: Class<T>, columnName: String): T? = try
         {
             enumClass.enumConstants.first { it.name == this[columnName] }
         }
@@ -364,7 +379,16 @@ class CSVReader @JvmOverloads constructor(
          * Uppercase with underscores the value of the column.
          */
         @SinceKotlin("9999.0")
-        fun <T : Enum<T>> getEnumUsingUpperCase(enumClass: Class<T>, columnName: String): Enum<T>? = try
+        fun <T : Enum<T>> getEnumUsingUpperCase(enumClass: Class<T>, columnName: String): T
+        {
+            return enumClass.enumConstants.first { it.name == camelRegex.replace(this[columnName].uppercase()) { a -> "_${a.value}" } }
+        }
+
+        /**
+         * Uppercase with underscores the value of the column.
+         */
+        @SinceKotlin("9999.0")
+        fun <T : Enum<T>> getEnumOrNullUsingUpperCase(enumClass: Class<T>, columnName: String): Enum<T>? = try
         {
             enumClass.enumConstants.first { it.name == camelRegex.replace(this[columnName].uppercase()) { a -> "_${a.value}" } }
         }
