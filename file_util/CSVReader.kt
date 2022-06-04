@@ -1,5 +1,5 @@
-import com.elian.extension.camelToSnakeCase
 import java.io.BufferedReader
+import java.io.File
 import java.io.FileReader
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -7,11 +7,13 @@ import java.util.function.Consumer
 import java.util.function.Predicate
 
 class CSVReader @JvmOverloads constructor(
-    val filename: String,
+    pathname: String,
     val hasHeader: Boolean,
     val separator: Char = ','
 )
 {
+    val file = File(pathname)
+
     init
     {
         if (hasHeader) getHeader()
@@ -149,9 +151,9 @@ class CSVReader @JvmOverloads constructor(
 
     fun getRow(rowNumber: Long): List<String>
     {
-        var rowFromSpecificLine = emptyList<String>()
+        val rowFromSpecificLine: List<String>
 
-        val specificLine = Files.lines(Paths.get(filename)).use { it.skip(rowNumber + 1).findFirst().get() }
+        val specificLine = Files.lines(file.toPath()).use { it.skip(rowNumber + 1).findFirst().get() }
 
         rowFromSpecificLine = specificLine.split(separator).toList()
 
@@ -160,7 +162,7 @@ class CSVReader @JvmOverloads constructor(
 
     fun getRowWithNamedColumns(rowNumber: Long): Row
     {
-        val specificLine = Files.lines(Paths.get(filename)).use { it.skip(rowNumber + 1).findFirst().get() }
+        val specificLine = Files.lines(file.toPath()).use { it.skip(rowNumber + 1).findFirst().get() }
 
         val columns = specificLine.split(separator).toList()
 
@@ -233,7 +235,7 @@ class CSVReader @JvmOverloads constructor(
 
         var line: String?
 
-        BufferedReader(FileReader(filename)).use { br ->
+        BufferedReader(FileReader(file)).use { br ->
 
             if (br.readLine().also { line = it } != null)
             {
@@ -251,7 +253,7 @@ class CSVReader @JvmOverloads constructor(
     {
         var line: String?
 
-        BufferedReader(FileReader(filename)).use { br ->
+        BufferedReader(FileReader(file)).use { br ->
 
             if (hasHeader) br.readLine()
 
@@ -267,7 +269,7 @@ class CSVReader @JvmOverloads constructor(
     {
         var line: String?
 
-        BufferedReader(FileReader(filename)).use { br ->
+        BufferedReader(FileReader(file)).use { br ->
 
             if (hasHeader) br.readLine()
 
