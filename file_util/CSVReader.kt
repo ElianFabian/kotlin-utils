@@ -2,7 +2,6 @@ import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
 import java.nio.file.Files
-import java.nio.file.Paths
 import java.util.function.Consumer
 import java.util.function.Predicate
 
@@ -21,10 +20,10 @@ class CSVReader @JvmOverloads constructor(
 
     private lateinit var headersWithPositions: HashMap<String, Int>
 
-    val rowCount: Int
+    val rowCount: Long
         get()
         {
-            var rowCount = 0
+            var rowCount = 0L
 
             readFileRows { rowCount++ }
 
@@ -50,6 +49,10 @@ class CSVReader @JvmOverloads constructor(
 
             return firstRow
         }
+    
+    val last get(): List<String> = getRow(rowCount - 1)
+    
+    val lastWithNamedColumns get(): Row = Row(getRow(rowCount - 1))
 
     //region Public methods
 
