@@ -322,7 +322,7 @@ class CSVReader @JvmOverloads constructor(
         }
 
         /**
-         * Uppercase the value of the column.
+         * Uppercase with underscores the value of the column.
          */
         inline fun <reified T : Enum<T>> getEnumUsingUpperCase(columnName: String): T? = try
         {
@@ -345,7 +345,7 @@ class CSVReader @JvmOverloads constructor(
         }
 
         /**
-         * Uppercase the value of the column.
+         * Uppercase with underscores the value of the column.
          */
         @SinceKotlin("9999.0")
         fun <T : Enum<T>> getEnumUsingUpperCase(enumClass: Class<T>, columnName: String): Enum<T>? = try
