@@ -378,6 +378,6 @@ class CSVReader @JvmOverloads constructor(
          */
         operator fun get(columnName: String): String = getString(columnName)
     }
-
-    class ColumnNotFoundException(columnName: String) : Exception("Column $columnName not found")
 }
+
+class ColumnNotFoundException(columnName: String) : Exception("Column $columnName not found")
