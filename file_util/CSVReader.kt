@@ -20,7 +20,7 @@ class CSVReader @JvmOverloads constructor(
         if (hasHeader) getHeader()
     }
 
-    private lateinit var headersWithPositions: HashMap<String, Int>
+    private lateinit var headerWithPositions: HashMap<String, Int>
 
     val rowCount: Long
         get()
@@ -98,7 +98,7 @@ class CSVReader @JvmOverloads constructor(
         {
             val namedRow = hashMapOf<String, String>()
 
-            headersWithPositions.forEach { (columnName, position) ->
+            headerWithPositions.forEach { (columnName, position) ->
 
                 namedRow[columnName] = it[position]
             }
@@ -283,7 +283,7 @@ class CSVReader @JvmOverloads constructor(
 
     private fun getHeader()
     {
-        headersWithPositions = hashMapOf()
+        headerWithPositions = hashMapOf()
 
         var line: String?
 
@@ -295,7 +295,7 @@ class CSVReader @JvmOverloads constructor(
 
                 for (i in header.indices)
                 {
-                    headersWithPositions[header[i]] = i
+                    headerWithPositions[header[i]] = i
                 }
             }
         }
@@ -342,9 +342,9 @@ class CSVReader @JvmOverloads constructor(
 
         fun getString(columnName: String): String
         {
-            if (!headersWithPositions.contains(columnName)) throw ColumnNotFoundException(columnName)
+            if (!headerWithPositions.contains(columnName)) throw ColumnNotFoundException(columnName)
 
-            return columns[headersWithPositions[columnName]!!]
+            return columns[headerWithPositions[columnName]!!]
         }
 
         fun getChar(columnName: String): Char = this[columnName][0]
