@@ -269,7 +269,7 @@ class CSVReader @JvmOverloads constructor(
 
             if (!groupedRows.containsKey(currentValueToGroupBy))
             {
-                groupedRows[currentValueToGroupBy] = mutableListOf<Row>().apply { add(currentRow) }
+                groupedRows[currentValueToGroupBy] = mutableListOf(currentRow)
             }
             else groupedRows[currentValueToGroupBy]!!.add(currentRow)
         }
