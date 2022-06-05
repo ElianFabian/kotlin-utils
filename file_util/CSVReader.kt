@@ -425,17 +425,17 @@ class CSVReader @JvmOverloads constructor(
         }
 
         /**
-         * Uppercase with underscores the value of the column.
+         * Upper-snake-case the toStringValue of the column.
          */
-        inline fun <reified T : Enum<T>> getEnumUpperCase(columnName: String): T
+        inline fun <reified T : Enum<T>> getEnumUppersSnakeCase(columnName: String): T
         {
             return enumValueOf(camelRegex.replace(this[columnName].uppercase()) { "_${it.value}" })
         }
 
         /**
-         * Uppercase with underscores the value of the column.
+         * Upper-snake-case the toStringValue of the column.
          */
-        inline fun <reified T : Enum<T>> getEnumOrNullUpperCase(columnName: String): T? = try
+        inline fun <reified T : Enum<T>> getEnumOrNullUpperSnakeCase(columnName: String): T? = try
         {
             enumValueOf<T>(camelRegex.replace(this[columnName].uppercase()) { "_${it.value}" })
         }
@@ -462,19 +462,19 @@ class CSVReader @JvmOverloads constructor(
         }
 
         /**
-         * Uppercase with underscores the value of the column.
+         * Upper-snake-case the toStringValue of the column.
          */
         @SinceKotlin("9999.0")
-        fun <T : Enum<T>> getEnumUpperCase(enumClass: Class<T>, columnName: String): T
+        fun <T : Enum<T>> getEnumUppersSnakeCase(enumClass: Class<T>, columnName: String): T
         {
             return enumClass.enumConstants.first { it.name == camelRegex.replace(this[columnName].uppercase()) { a -> "_${a.value}" } }
         }
 
         /**
-         * Uppercase with underscores the value of the column.
+         * Upper-snake-case the toStringValue of the column.
          */
         @SinceKotlin("9999.0")
-        fun <T : Enum<T>> getEnumOrNullUpperCase(enumClass: Class<T>, columnName: String): Enum<T>? = try
+        fun <T : Enum<T>> getEnumOrNullUpperSnakeCase(enumClass: Class<T>, columnName: String): Enum<T>? = try
         {
             enumClass.enumConstants.first { it.name == camelRegex.replace(this[columnName].uppercase()) { a -> "_${a.value}" } }
         }
@@ -494,4 +494,4 @@ class CSVReader @JvmOverloads constructor(
 
 class ColumnNotFoundException(columnName: String) : Exception("Column '$columnName' not found")
 
-class NotABooleanValueException(columnName: String, columnValue: String) : Exception("The value '$columnValue' in '$columnName' column is not a boolean value")
+class NotABooleanValueException(columnName: String, columnValue: String) : Exception("The toStringValue '$columnValue' in '$columnName' column is not a boolean toStringValue")
