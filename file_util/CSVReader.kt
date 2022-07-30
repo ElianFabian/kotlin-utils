@@ -10,12 +10,12 @@ import kotlin.NoSuchElementException
 import kotlin.collections.HashMap
 
 class CSVReader @JvmOverloads constructor(
-    filename: String,
+    filePath: String,
     val hasHeader: Boolean,
     val separator: Char = ','
 )
 {
-    val file = File(filename)
+    val file = File(filePath)
 
     init
     {
