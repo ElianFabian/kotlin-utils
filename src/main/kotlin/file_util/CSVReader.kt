@@ -66,7 +66,7 @@ class CSVReader @JvmOverloads constructor(
 
     val last get(): List<String> = getRow(rowCount - 1)
 
-    val lastWithHeader get(): Row = Row(getRow(rowCount - 1))
+    val lastWithHeader get() = Row(getRow(rowCount - 1))
 
     //region Public methods
 
