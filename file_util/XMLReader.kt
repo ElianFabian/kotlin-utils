@@ -8,7 +8,7 @@ import java.util.function.Consumer
 import javax.xml.parsers.DocumentBuilder
 import javax.xml.parsers.DocumentBuilderFactory
 
-class XMLReader(val filename: String)
+class XMLReader(filePath: String)
 {
     val document: Document
 
@@ -16,7 +16,7 @@ class XMLReader(val filename: String)
 
     init
     {
-        document = docBuilder.parse(filename)
+        document = docBuilder.parse(filePath)
     }
 
     //region Methods
