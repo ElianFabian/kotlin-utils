@@ -1,18 +1,7 @@
 
-.idea/misc.xml
-.idea/modules.xml
-.idea/Utils.iml
-.idea/vcs.xml
-.idea/workspace.xml
+.idea/*
+lib/*
+
 Main.kt
-lib/kotlin-test.jar
-lib/kotlin-test-sources.jar
-lib/kotlin-stdlib.jar
-lib/kotlin-stdlib-sources.jar
-lib/kotlin-stdlib-jdk8.jar
-lib/kotlin-stdlib-jdk8-sources.jar
-lib/kotlin-stdlib-jdk7.jar
-lib/kotlin-stdlib-jdk7-sources.jar
-lib/kotlin-reflect.jar
-lib/kotlin-reflect-sources.jar
-.idea/libraries/KotlinJavaRuntime.xml
+
+res/*
