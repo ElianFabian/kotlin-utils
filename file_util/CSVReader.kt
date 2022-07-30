@@ -29,7 +29,7 @@ class CSVReader @JvmOverloads constructor(
         {
             var rowCount = 0L
 
-            readFileRows { rowCount++ }
+            readAllFileRows { rowCount++ }
 
             return rowCount
         }
@@ -39,7 +39,7 @@ class CSVReader @JvmOverloads constructor(
         {
             var columnCount = 0
 
-            readFileRows { columnCount = it.size }
+            readAllFileRows { columnCount = it.size }
 
             return columnCount
         }
@@ -66,37 +66,37 @@ class CSVReader @JvmOverloads constructor(
 
     val last get(): List<String> = getRow(rowCount - 1)
 
-    val lastWithNamedColumns get(): Row = Row(getRow(rowCount - 1))
+    val lastWithHeader get(): Row = Row(getRow(rowCount - 1))
 
     //region Public methods
 
-    fun read(row: Consumer<List<String>>) = readFileRows { row.accept(it) }
+    fun read(row: Consumer<List<String>>) = readAllFileRows { row.accept(it) }
 
     fun read(): List<List<String>>
     {
         val rows = mutableListOf<List<String>>()
 
-        readFileRows { rows.add(it) }
+        readAllFileRows { rows.add(it) }
 
         return rows
     }
 
-    fun readWithNamedColumns(row: Consumer<Row>)
+    fun readWithHeader(row: Consumer<Row>)
     {
         val currentRow = Row()
 
-        readFileRows()
+        readAllFileRows()
         {
             currentRow.columns = it
             row.accept(currentRow)
         }
     }
 
-    fun readWithNamedColumns(): List<HashMap<String, String>>
+    fun readWithHeader(): List<HashMap<String, String>>
     {
         val rows: MutableList<HashMap<String, String>> = mutableListOf()
 
-        readFileRows()
+        readAllFileRows()
         {
             val namedRow = hashMapOf<String, String>()
 
@@ -128,7 +128,7 @@ class CSVReader @JvmOverloads constructor(
     {
         val values = mutableListOf<String>()
 
-        readWithNamedColumns()
+        readWithHeader()
         {
             val currentValue = it[columnName]
 
@@ -156,7 +156,7 @@ class CSVReader @JvmOverloads constructor(
     {
         val values = mutableListOf<String>()
 
-        readWithNamedColumns()
+        readWithHeader()
         {
             val currentValue = it[columnName]
 
@@ -177,7 +177,7 @@ class CSVReader @JvmOverloads constructor(
         return rowFromSpecificLine
     }
 
-    fun getRowWithNamedColumns(rowNumber: Long): Row
+    fun getRowWithHeader(rowNumber: Long): Row
     {
         val specificLine = Files.lines(file.toPath()).use { it.skip(rowNumber + 1).findFirst().get() }
 
@@ -190,7 +190,7 @@ class CSVReader @JvmOverloads constructor(
     {
         var foundRow: List<String> = emptyList()
 
-        readFileRows()
+        readAllFileRows()
         {
             val hasBeenFound = row.test(it)
             if (hasBeenFound) foundRow = it
@@ -203,7 +203,7 @@ class CSVReader @JvmOverloads constructor(
     {
         val foundRows = mutableListOf<List<String>>()
 
-        readFileRows()
+        readAllFileRows()
         {
             val hasBeenFound = row.test(it)
             if (hasBeenFound) foundRows.add(it)
@@ -212,11 +212,11 @@ class CSVReader @JvmOverloads constructor(
         return foundRows
     }
 
-    fun findFirstWithNamedColumns(row: Predicate<Row>): Row
+    fun findFirstWithHeader(row: Predicate<Row>): Row
     {
         var foundRow = Row()
 
-        readFileRows()
+        readAllFileRows()
         {
             val currentRow = Row(it)
 
@@ -227,11 +227,11 @@ class CSVReader @JvmOverloads constructor(
         return foundRow
     }
 
-    fun findAllWithNamedColumns(row: Predicate<Row>): List<Row>
+    fun findAllWithHeader(row: Predicate<Row>): List<Row>
     {
         val foundRows = mutableListOf<Row>()
 
-        readFileRows()
+        readAllFileRows()
         {
             val currentRow = Row(columns = it)
 
@@ -246,7 +246,7 @@ class CSVReader @JvmOverloads constructor(
     {
         val groupedRows = mutableMapOf<String, MutableList<List<String>>>()
 
-        readFileRows()
+        readAllFileRows()
         {
             val currentValueToGroupBy = it[columnPosition]
 
@@ -260,11 +260,11 @@ class CSVReader @JvmOverloads constructor(
         return groupedRows
     }
 
-    fun groupByWithNamedColumns(columnName: String): Map<String, List<Row>>
+    fun groupBy(columnName: String): Map<String, List<Row>>
     {
         val groupedRows = mutableMapOf<String, MutableList<Row>>()
 
-        readFileRows()
+        readAllFileRows()
         {
             val currentRow = Row(it)
             val currentValueToGroupBy = currentRow[columnName]
@@ -303,7 +303,7 @@ class CSVReader @JvmOverloads constructor(
         }
     }
 
-    private fun readFileRows(action: (currentRow: List<String>) -> Unit)
+    private fun readAllFileRows(action: (currentRow: List<String>) -> Unit)
     {
         var line: String?
 
@@ -349,35 +349,35 @@ class CSVReader @JvmOverloads constructor(
             return columns[headerWithPositions[columnName]!!]
         }
 
-        fun getChar(columnName: String): Char = this[columnName][0]
+        fun getChar(columnName: String) = this[columnName][0]
 
-        fun getByte(columnName: String): Byte = this[columnName].toByte()
-        fun getUByte(columnName: String): UByte = this[columnName].toUByte()
-        fun getByteOrNull(columnName: String): Byte? = this[columnName].toByteOrNull()
-        fun getUByteOrNull(columnName: String): UByte? = this[columnName].toUByteOrNull()
+        fun getByte(columnName: String) = this[columnName].toByte()
+        fun getUByte(columnName: String) = this[columnName].toUByte()
+        fun getByteOrNull(columnName: String) = this[columnName].toByteOrNull()
+        fun getUByteOrNull(columnName: String) = this[columnName].toUByteOrNull()
 
-        fun getShort(columnName: String): Short = this[columnName].toShort()
-        fun getUShort(columnName: String): UShort = this[columnName].toUShort()
-        fun getShortOrNull(columnName: String): Short? = this[columnName].toShortOrNull()
-        fun getUShortOrNull(columnName: String): UShort? = this[columnName].toUShortOrNull()
+        fun getShort(columnName: String) = this[columnName].toShort()
+        fun getUShort(columnName: String) = this[columnName].toUShort()
+        fun getShortOrNull(columnName: String) = this[columnName].toShortOrNull()
+        fun getUShortOrNull(columnName: String) = this[columnName].toUShortOrNull()
 
-        fun getInt(columnName: String): Int = this[columnName].toInt()
-        fun getUInt(columnName: String): UInt = this[columnName].toUInt()
-        fun getIntOrNull(columnName: String): Int? = this[columnName].toIntOrNull()
-        fun getUIntOrNull(columnName: String): UInt? = this[columnName].toUIntOrNull()
+        fun getInt(columnName: String) = this[columnName].toInt()
+        fun getUInt(columnName: String) = this[columnName].toUInt()
+        fun getIntOrNull(columnName: String) = this[columnName].toIntOrNull()
+        fun getUIntOrNull(columnName: String) = this[columnName].toUIntOrNull()
 
-        fun getLong(columnName: String): Long = this[columnName].toLong()
-        fun getULong(columnName: String): ULong = this[columnName].toULong()
-        fun getLongOrNull(columnName: String): Long? = this[columnName].toLongOrNull()
-        fun getULongOrNull(columnName: String): ULong? = this[columnName].toULongOrNull()
+        fun getLong(columnName: String) = this[columnName].toLong()
+        fun getULong(columnName: String) = this[columnName].toULong()
+        fun getLongOrNull(columnName: String) = this[columnName].toLongOrNull()
+        fun getULongOrNull(columnName: String) = this[columnName].toULongOrNull()
 
-        fun getFloat(columnName: String): Float = this[columnName].toFloat()
-        fun getFloatOrNull(columnName: String): Float? = this[columnName].toFloatOrNull()
-        fun getDouble(columnName: String): Double = this[columnName].toDouble()
-        fun getDoubleOrNull(columnName: String): Double? = this[columnName].toDoubleOrNull()
+        fun getFloat(columnName: String) = this[columnName].toFloat()
+        fun getFloatOrNull(columnName: String) = this[columnName].toFloatOrNull()
+        fun getDouble(columnName: String) = this[columnName].toDouble()
+        fun getDoubleOrNull(columnName: String) = this[columnName].toDoubleOrNull()
 
-        fun getBoolean(columnName: String): Boolean = this[columnName].toBoolean()
-        fun getBooleanOrNull(columnName: String): Boolean? = this[columnName].lowercase().toBooleanStrictOrNull()
+        fun getBoolean(columnName: String) = this[columnName].toBoolean()
+        fun getBooleanOrNull(columnName: String) = this[columnName].lowercase().toBooleanStrictOrNull()
 
         fun getBooleanFromStrings(columnName: String, trueString: String, falseString: String): Boolean
         {
@@ -488,12 +488,11 @@ class CSVReader @JvmOverloads constructor(
         /**
          * Equivalent to getString().
          */
-        operator fun get(columnName: String): String = getString(columnName)
+        operator fun get(columnName: String) = getString(columnName)
 
-        override fun toString(): String = columns.toString()
+        override fun toString() = columns.toString()
     }
 }
 
 class ColumnNotFoundException(columnName: String) : Exception("Column '$columnName' not found")
-
 class NotABooleanValueException(columnName: String, columnValue: String) : Exception("The toStringValue '$columnValue' in '$columnName' column is not a boolean toStringValue")
