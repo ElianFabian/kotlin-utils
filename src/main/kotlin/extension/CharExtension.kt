@@ -1,12 +1,6 @@
-
-
-
-fun Char.toBoolean(charArray: String): Boolean?
+fun Char.toBoolean(trueChar: Char, falseChar: Char): Boolean?
 {
-    if (charArray.isEmpty()) throw IllegalArgumentException("CharArray is empty")
-    if (charArray.length != 2) throw IllegalArgumentException("CharArray length must be 2")
-
-    return if (this == charArray[0]) true
-    else if (this == charArray[1]) false
+    return if (this == trueChar) true
+    else if (this == falseChar) false
     else null
 }
