@@ -1,3 +1,5 @@
+package extension
+
 fun Char.toBoolean(trueChar: Char, falseChar: Char): Boolean?
 {
     return if (this == trueChar) true
